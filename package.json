@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js",
-    "watch": "node-sass --watch src/resources/scss/ --output src/public/css/"
+    "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
+    "test1": "npm run start & npm run watch",
+    "test2": "npm-run-all --parallel start watch"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Huando22222/nodejs-handlebars.git"
