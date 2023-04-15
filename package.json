@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon src/index.js",
+    "watch": "node-sass --watch src/resources/scss/ --output src/public/css/"
   },
   "repository": {
     "type": "git",
@@ -19,10 +20,11 @@
   "homepage": "https://github.com/Huando22222/nodejs-handlebars#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "express-handlebars": "^7.0.6",
-    "hbs": "^4.2.0",
+    "express-handlebars": "^7.0.7",
+    "handlebars": "^4.7.7",
     "morgan": "^1.10.0",
     "node": "^19.8.1",
+    "node-sass": "^8.0.0",
     "nodemon": "^2.0.22"
   }
 }
