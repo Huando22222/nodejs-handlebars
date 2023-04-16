@@ -6,8 +6,8 @@ class SiteController {
 
     //[get]/news/:slug
     search(req,res){
-        // res.render('search',{layout: 'main'});
-        res.send("search page");
+        res.render('search',{layout: 'main'});
+        //es.send('search');
     }
 }
 

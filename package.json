@@ -4,13 +4,13 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
+    "beautiful":"lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js",
     "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
     "test1": "npm run start & npm run watch",
     "test2": "npm-run-all --parallel start watch"
   },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Huando22222/nodejs-handlebars.git"
@@ -21,13 +21,26 @@
     "url": "https://github.com/Huando22222/nodejs-handlebars/issues"
   },
   "homepage": "https://github.com/Huando22222/nodejs-handlebars#readme",
+  
+  "lint-staged":{
+    "src/**/*.{js,json,scss}":"prettier --single-quote --trailing-comma all --tab-width 4 --write"
+  },
+
+  "husky":{
+    "hooks":{
+      "pre-commit":"npm lint-staged"
+    }
+  },
   "dependencies": {
     "express": "^4.18.2",
     "express-handlebars": "^7.0.7",
     "handlebars": "^4.7.7",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
     "morgan": "^1.10.0",
     "node": "^19.8.1",
     "node-sass": "^8.0.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7"
   }
 }

@@ -6,7 +6,7 @@ class NewsController {
 
     //[get]/news/:slug
     show(req,res){
-        res.send('news',{layout: 'main'});
+        res.send('news slugggg',{layout: 'main'});
     }
 }
 
