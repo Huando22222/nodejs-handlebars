@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const newsController = require('../app/controllers/CourseController');
+const courseController = require('../app/controllers/CourseController');
 
-
-router.get('/:slug',newsController.show);
+router.get('/create',courseController.create);
+router.post('/store',courseController.store);
+router.get('/:slug',courseController.show);
 
 
 module.exports = router;
