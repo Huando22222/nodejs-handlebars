@@ -4,6 +4,8 @@ const express = require('express');
 const hbs = require('express-handlebars');
 
 const app = express();
+const methodOverride = require('method-override')//https://www.youtube.com/watch?v=HdVOT7Neh18&list=PL_-VfJajZj0VatBpaXkEHK_UPHL7dW6I3&index=28 //28:00
+
 const route = require('./routes');
 const db = require('./config/db');
 
@@ -15,12 +17,17 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
+app.use(methodOverride('_method'));
+
 // app.use(morgan('combined'));
 app.use(express.static(path.join('./src','public')));
 // app.use(express.static(path.join('public')));
 //Template engine
 app.engine("hbs", hbs.engine({
     extname: '.hbs',
+    helpers: {
+        sum: (a,b) => a+b,
+    }
 }));
 app.set("view engine", "hbs");
 
