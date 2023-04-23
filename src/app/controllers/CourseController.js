@@ -17,7 +17,7 @@ class CourseController {
 
     //[POST] /courses/store
     store(req,res,next){
-        // res.json(req.body);//check only
+        
         const formData=req.body;
         formData.image=`https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
         const course = new Course(formData);
@@ -30,7 +30,8 @@ class CourseController {
                 //chua biet fix loi sao
                 res.redirect('/');
             })
-        // res.json(req.body)
+        
+        // res.json(req.body);//check only
 
     }
 
@@ -49,6 +50,13 @@ class CourseController {
     update(req,res,next){ 
         Course.updateOne({_id: req.params.id},req.body)
             .then(()=> res.redirect('/me/stored/courses'))
+            .catch(next);
+    }
+
+    //[DELETE] /courses/:id  
+    destroy(req,res,next){
+        Course.deleteOne({_id: req.params.id})
+            .then(()=> res.redirect('back'))
             .catch(next);
     }
 }

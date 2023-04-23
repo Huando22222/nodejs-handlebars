@@ -29,7 +29,7 @@ class SiteController {
     //[get]/news/:slug
     search(req,res){
         res.render('search',{layout: 'main'});
-        //es.send('search');
+        //res.send('search');
     }
 }
 
