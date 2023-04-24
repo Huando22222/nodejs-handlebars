@@ -18,11 +18,11 @@ class CourseController {
     //[POST] /courses/store
     store(req,res,next){
         
-        const formData=req.body;
-        formData.image=`https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
-        const course = new Course(formData);
+        //const formData=req.body;
+        req.body.image=`https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
+        const course = new Course(req.body);
         course.save()
-            .then(()=> res.redirect('/'))
+            .then(()=> res.redirect('/me/stored/courses'))
             .catch(error => {
                 //thong bao loi
                 res.json(req.body + 'trung ten khoa hoc & slug');
@@ -47,15 +47,27 @@ class CourseController {
     //GET, POST, PUT, PATH, DELETE, OPTIONS, HEAD
 
     //PUT /courses/:id  
-    update(req,res,next){ 
+    update(req,res,next){ //express
         Course.updateOne({_id: req.params.id},req.body)
             .then(()=> res.redirect('/me/stored/courses'))
             .catch(next);
     }
 
     //[DELETE] /courses/:id  
-    destroy(req,res,next){
-        Course.deleteOne({_id: req.params.id})
+    destroy(req,res,next){//mongoose-delete
+        Course.delete({_id: req.params.id})
+            .then(()=> res.redirect('back'))
+            .catch(next);
+    }
+    //[DELETE] /courses/:id/force
+    forceDestroy(req,res,next){//mongoose-delete
+        Course.deleteOne({_id: req.params.id})  //recommend soft delete x2
+            .then(()=> res.redirect('back'))
+            .catch(next);
+    }
+    //[PATCH] /courses/:id/restore
+    restore(req,res,next){//mongoose-delete
+        Course.restore({_id: req.params.id})
             .then(()=> res.redirect('back'))
             .catch(next);
     }

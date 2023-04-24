@@ -1,7 +1,30 @@
 <div class="mt-4">
     <table class="table mt-4">
+        <div>
+            <h3>Khóa học của tôi</h3>
+            {{!-- {{#if deletedCount}} --}}
+            <a href="/me/trash/courses">thùng rác ({{deletedCount}})</a>
+            {{!-- {{/if}} --}}
+            <div class="mt-4 d-flex align-items-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                    <label class="form-check-label" for="checkbox-all">
+                        Chọn tất cả
+                    </label>
+                </div>
+                <select class="form-select form-select-sm checkbox-select-all-options" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <button type="button" class="btn btn-primary btn-sm d">thực hiện</button>
+            </div>
+        </div>
         <thead>
             <tr>
+                <th></th>
                 <th scope="col">#</th>
                 <th scope="col">Tên</th>
                 <th scope="col">Thời gian tạo</th>
@@ -12,6 +35,14 @@
         <tbody>
             {{#each courses}}
                 <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                
+                            </label>
+                        </div>
+                    </td>
                     <th scope="row">{{sum @index 1}}</th>
                     <td>{{this.name}}</td>
                     <td>{{this.createdAt}}</td>
@@ -20,6 +51,11 @@
                         <a href="" class="btn btn-link" data-bs-toggle="modal" data-bs-id="{{this._id}}" data-bs-target="#delete-course-modal">xóa</a>
                     </td>
                 </tr>
+            {{else}}
+               <td colspan="5" class="text-center">
+                    Bạn chưa đang khóa học nào. 
+                    <a href="/courses/create">Đăng khóa học</a>
+               </td> 
             {{/each}}
         </tbody>
     </table>
@@ -45,18 +81,38 @@
     </div>
 </div>
 
-{{!-- delete hidden form --}}
-<form name="delete-course-form" method="POST" action="/courses/{{course._id}}?_method=PUT"></form>
+{{!-- delete hidden form                      action="/courses/{{course._id}}?_method=PUT"--}}
+<form name="delete-course-form" method="POST" ></form>
 
 
 <script>
     var courseId;
     var deleteForm = document.forms['delete-course-form'];
 
+
+    var checkboxAll = document.getElementById('checkbox-all');
+    console.log(checkboxAll);
+
+    checkboxAll.onchange = function () {
+        {{!-- alert(checkboxAll); --}}
+        console.log((checkboxAll).checked);
+    };
+
+
+
+    {{!-- checkboxAll.onchange = checkboxFunction(){
+        {
+        alert(checkboxAll)
+    }
+    } --}}
+
+
+    ///////////////////////////////////////////////////////////////
     var pressDeleteModal = document.getElementById('delete-course-modal')   
     //document.addEventListener('show.bs.modal', function (event) {
     pressDeleteModal.addEventListener('show.bs.modal', function (event) { // 
         // Button that triggered the modal
+        
         var button = event.relatedTarget
         var id = button.getAttribute('data-bs-id')
         console.log(id);  
@@ -66,8 +122,9 @@
 
     var pressButtonDelete = document.getElementById('btn-delete-course')
     pressButtonDelete.onclick = function(){
-        {{!-- alert(courseId); --}}
+        //alert(courseId);
         deleteForm.action = '/courses/'+ courseId +'?_method=DELETE';
         deleteForm.submit();
     }
+
 </script>
