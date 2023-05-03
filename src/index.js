@@ -9,6 +9,8 @@ const methodOverride = require('method-override')//https://www.youtube.com/watch
 const route = require('./routes');
 const db = require('./config/db');
 
+const SortMiddleware = require('./app/middlewares/SortMiddleware');
+
 const port = 3000;
 
 db.connect();
@@ -18,6 +20,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 app.use(methodOverride('_method'));
+app.use(SortMiddleware);
 
 // app.use(morgan('combined'));
 app.use(express.static(path.join('./src','public')));
@@ -27,6 +30,29 @@ app.engine("hbs", hbs.engine({
     extname: '.hbs',
     helpers: {
         sum: (a,b) => a+b,
+        sortable: (field ,sort) =>{
+            const sortType = field === sort.column ? sort.type: 'default';
+            const icons = {
+                default: 'fa-solid fa-sort',
+                asc: 'fa-solid fa-sort-up',
+                desc: 'fa-solid fa-sort-down'
+            };
+            //https://www.youtube.com/watch?v=MJ7JZSW6seA&list=PL_-VfJajZj0VatBpaXkEHK_UPHL7dW6I3&index=34
+            const types = {
+                default: 'desc',
+                asc: 'desc',
+                desc: 'asc',
+            };
+
+            // const icon = icons[sort.type];
+            // const type = types[sort.type];
+            const icon = icons[sortType];
+            const type = types[sortType];
+
+            return `<a href="?_sort&column=${field}&type=${type}">
+                        <i class="${icon}"></i>
+                    </a>`;
+        }
     }
 }));
 app.set("view engine", "hbs");

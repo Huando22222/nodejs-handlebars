@@ -1,4 +1,4 @@
-<div class="mt-4">
+<form class="mt-4" name="container-form" method="POST" action="/courses/handle-form-actions">
     <table class="table mt-4">
         <div>
             <h3>Khóa học của tôi</h3>
@@ -12,22 +12,29 @@
                         Chọn tất cả
                     </label>
                 </div>
-                <select class="form-select form-select-sm checkbox-select-all-options" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select class="form-select form-select-sm checkbox-select-all-options" name="action" required="required">
+                    <option value="" >Open this select menu</option>
+                    <option value="delete">xóa</option>
                 </select>
 
-                <button type="button" class="btn btn-primary btn-sm d">thực hiện</button>
+                <button class="btn btn-primary btn-sm btn-check-all-submit disabled">thực hiện</button>
             </div>
         </div>
         <thead>
             <tr>
                 <th></th>
                 <th scope="col">#</th>
-                <th scope="col">Tên</th>
-                <th scope="col">Thời gian tạo</th>
+                <th scope="col">
+                    Tên
+                    {{{sortable 'name' _sort}}} {{!-- van de ve bao mat      tan cong XSS {{{raw}}}, {{html-escaped}} --}}
+                    {{!-- <a href="?_sort&column=name&type=asc">
+                        <i class="fa-solid fa-sort"></i>
+                    </a> --}}
+                </th>
+                <th scope="col">
+                    Thời gian tạo
+                    {{{sortable 'createdAt' _sort}}}
+                </th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -37,8 +44,8 @@
                 <tr>
                     <td>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
+                            <input class="form-check-input courseItemCheckbox" type="checkbox" name="courseIds[]" value="{{this._id}}">
+                            {{!-- <label class="form-check-label" for="flexCheckDefault"> --}}
                                 
                             </label>
                         </div>
@@ -59,7 +66,7 @@
             {{/each}}
         </tbody>
     </table>
-</div>
+</form>
 
 
 {{!-- confirm delete course --}}
@@ -91,20 +98,80 @@
 
 
     var checkboxAll = document.getElementById('checkbox-all');
-    console.log(checkboxAll);
+    //console.log(checkboxAll);
+    //<input class="form-check-input" type="checkbox" name="courseIds[]" value="{{this._id}}" id="flexCheckDefault">
+    //var courseItemCheckbox = document.getElementsByClassName('courseIds[]');
+    //var courseItemCheckbox = document.querySelectorAll("input[name='courseIds[]']");
+    //var courseItemCheckbox = document.getElementsByClassName("courseItemCheckbox");
+    //console.log(courseItemCheckbox);
+
+    var inputs = document.querySelectorAll("input[name='courseIds[]']");
+    var count = document.querySelectorAll("input[name='courseIds[]']:checked").length;
+
+    //console.log(inputs.length);
+    inputs.forEach(checkbox=>{
+        var isFullChecked=inputs.length;
+        checkbox.onchange= function(){
+            count = document.querySelectorAll("input[name='courseIds[]']:checked").length;
+            //console.log(count);
+            
+            if(count==isFullChecked){
+                checkboxAll.checked=true;
+            }else{
+                checkboxAll.checked=false;
+            }
+            renderCheckAllSubmitBtn();
+        }
+    })
+
 
     checkboxAll.onchange = function () {
-        {{!-- alert(checkboxAll); --}}
-        console.log((checkboxAll).checked);
+        //alert(checkboxAll);//check only     
+        var isChecked = (checkboxAll).checked;
+        //var inputs = document.querySelectorAll("input[name='courseIds[]']");
+        if(isChecked){
+            //console.log((checkboxAll).checked);//console.log('true')
+            //courseItemCheckbox.checked=true;
+            //console.log(inputs.length);
+
+            inputs.forEach(checkbox=>{
+                    checkbox.checked = true;
+                    
+                    renderCheckAllSubmitBtn();                    
+                }
+            )
+        }else{
+            for (var i = 0; i < inputs.length; i++) {   
+                inputs[i].checked = false;   
+            }
+        }
     };
+    
+    var checkAllSubmitBtn = document.querySelector('.btn-check-all-submit');
 
-
-
-    {{!-- checkboxAll.onchange = checkboxFunction(){
-        {
-        alert(checkboxAll)
+    function renderCheckAllSubmitBtn(){
+        //console.log('render count: '+count);
+        var checkCount = document.querySelectorAll("input[name='courseIds[]']:checked").length;
+        if(checkCount>0){
+            checkAllSubmitBtn.classList.remove('disabled')
+            
+        }else{
+            checkAllSubmitBtn.classList.add('disabled')
+        }
     }
-    } --}}
+    
+    var containerForm = document.forms['container-form'];
+    
+    checkAllSubmitBtn.addEventListener('submit', function(e) {
+        //e.preventDefault();
+
+        //not necessary
+        {{!-- var isSubmitable = !checkAllSubmitBtn.classList.contains('disabled');
+        if(!isSubmitable){
+            e.preventDefault();
+            console.log(containerForm);
+        } --}}
+    });
 
 
     ///////////////////////////////////////////////////////////////
@@ -127,4 +194,5 @@
         deleteForm.submit();
     }
 
+    
 </script>
